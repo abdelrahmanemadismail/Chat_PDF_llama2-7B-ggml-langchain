@@ -5,7 +5,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import ConversationalRetrievalChain
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.llms import CTransformers
-import chainlit as cl
 from langchain.memory import ConversationBufferMemory
 import re
 
