@@ -51,10 +51,10 @@ class PDFChatBot:
     def load_llm(self):
         # Load the locally downloaded model here
         llm = CTransformers(
-            model="TheBloke/Llama-2-7B-Chat-GGML",
-            model_file="llama-2-7b-chat.ggmlv3.q4_1.bin",
+            model="TheBloke/Llama-2-13B-chat-GGML",
+            model_file="llama-2-13b-chat.ggmlv3.q5_K_M.bin",
             max_new_tokens=4000,
-            temperature=0.7,
+            temperature=0.0,
         )
         return llm
 
@@ -65,6 +65,9 @@ class PDFChatBot:
         db = FAISS.load_local(self.db_faiss_path, embeddings)
         # initializing the conversational chain
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+
+
+
         conversational_chain = ConversationalRetrievalChain.from_llm( llm=self.load_llm(),
                                                                       retriever=db.as_retriever(search_kwargs={"k": 3}),
                                                                       verbose=True,
@@ -85,6 +88,7 @@ chain = intialize_chain()
 
 while(True):
     query = input('User: ')
-    response = chain({"question": query, "chat_history": chat_history})
-    chat_history.append(response["answer"])  # Append the answer to chat history
+    formatted_prompt = chat_prompt.format(context=chat_prompt, question=query)
+    response = chain({"question": formatted_prompt, "chat_history": chat_history})
+    chat_history.append(response["answer"])
     print(response["answer"])
